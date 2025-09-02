@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}メッセージ詳細{% endblock %}
+
+{% block contents %}
+<div class="container mt-4">
+    <h2 class="mb-4">{{ object.subject }}</h2>
+    <p>送信者： {{ object.sender.username }}</p>
+    <p>{{ object.body|linebreaksbr }}</p>
+    <p><small>{{ object.created_at }}</small></p>
+    {% if object.recipient == request.user %}
+        <a href="{% url 'sns:message_reply' object.pk %}">返信</a>
+        <a href="{% url 'sns:message_inbox' %}">受信ボックス</a>
+    {% elif object.sender == request.user %}
+        <a href="{% url 'sns:message_forward' object.pk %}">転送</a>
+        <a href="{% url 'sns:message_outbox' %}">送信ボックス</a>
+    {% endif %}
+</div>
+{% endblock %}

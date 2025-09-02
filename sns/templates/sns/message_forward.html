@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}転送{% endblock %}
+
+{% block contents %}
+<div class="container mt-4">
+    <h2 class="mb-4">転送</h2>
+    <form method="post">
+        {% csrf_token %}
+        <table class="mb-4">
+            {{ form.as_table }}
+        </table>
+        <button class="btn btn-primary" type="submit">送信</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}アカウント登録{% endblock %}
+
+{% block contents %}
+<h1>アカウント登録</h1>
+    <form method="post" class="p-4 m-4 bg-light border border-success rounded form-group">
+    {% csrf_token %}
+    <label>ユーザー名</label>
+    <input type="text" name="username" class="form-control my-4" placeholder="ユーザー名" autocomplete="off">
+    {% for error in form.username.errors %}
+        <p class="text-danger small">{{ error }}</p>
+    {% endfor %}
+
+    <label>パスワード</label>
+    <input type="password" name="password1" class="form-control my-4" placeholder="パスワード" autocomplete="new-password">
+    {% for error in form.password1.errors %}
+        <p class="text-danger small">{{ error }}</p>
+    {% endfor %}
+
+    <label>パスワード確認</label>
+    <input type="password" name="password2" class="form-control my-4" placeholder="パスワード確認用" autocomplete="new-password">
+    {% for error in form.password2.errors %}
+        <p class="text-danger small">{{ error }}</p>
+    {% endfor %}
+
+    <small class="mb-2 d-block text-start">パスワードは8文字以上で設定してください。</small>
+
+    <button type="submit" class="btn btn-success m-2">アカウント登録</button>
+</form>
+
+{% endblock %}

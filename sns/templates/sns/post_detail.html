@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}投稿詳細{% endblock %}
+
+{% block contents %}
+    <div class="container mt-4">
+        <h2 class="mb-4">{{ object.title }}</h2>
+        <p>{{ object.content }}</p>
+        <img src="{{ object.image.url }}" class="img-thumbnail">
+        <p><a href="{% url 'sns:post_update' object.pk %}">編集</a></p>
+        <p><a href="{% url 'sns:post_delete' object.pk %}">削除</a></p>
+    </div>
+{% endblock %}

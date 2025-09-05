@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}メッセージ削除{% endblock %}
+
+{% block contents %}
+<div class="container mt-4">
+    <h2 class="mb-4">メッセージ削除</h2>
+    <p>本当に削除してよろしいでしょうか？</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">削除</button>
+        <p><a href="{% url 'sns:message_detail' message.pk %}">戻る</a></p>
+    </form>
+</div>
+{% endblock %}

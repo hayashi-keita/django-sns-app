@@ -16,4 +16,7 @@ urlpatterns = [
     path('message/<int:pk>/detail/', views.MessageDetailView.as_view(), name='message_detail'),
     path('message/<int:pk>/reply/', views.MessageReplyView.as_view(), name='message_reply'),
     path('message/<int:pk>/forward/', views.MessageForwardView.as_view(), name='message_forward'),
+    path('message/<int:pk>/update/', views.MessageUpdateView.as_view(), name='message_update'),
+    path('message/<int:pk>/delete/', views.MessageDeleteView.as_view(), name='message_delete'),
+    path('attachment/<int:pk>/delete/', views.AttachmentDeleteView.as_view(), name='attachment_delete'),
 ]

@@ -5,4 +5,3 @@ venv/
 .env
 *.log
 media/
-post_images/

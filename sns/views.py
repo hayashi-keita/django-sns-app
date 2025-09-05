@@ -1,10 +1,11 @@
+from urllib import response
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.views import View
 from django.core.exceptions import PermissionDenied
-from .models import Post, Message
+from .models import Post, Message, Attachment
 from .forms import PostCreateForm, MessageForm
 
 def index_view(request):
@@ -61,8 +62,50 @@ class MessageCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.sender = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        # 複数ファイルをまとめて取得
+        files = self.request.FILES.getlist('files')
+        for f in files:
+            Attachment.objects.create(message=self.object, file=f)
+        return response
 
+class MessageUpdateView(LoginRequiredMixin, UpdateView):
+    model = Message
+    template_name = 'sns/message_update.html'
+    form_class = MessageForm
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.sender != self.request.user:
+            raise PermissionDenied
+        return obj
+    
+    def form_valid(self, form):
+        form.instance.is_update = True
+        response = super().form_valid(form)
+        # 新規ファイルの追加
+        files = self.request.FILES.getlist('files')
+        for f in files:
+            Attachment.objects.create(message=self.object, file=f)
+        return response
+    
+    def get_success_url(self):
+        return reverse('sns:message_detail', kwargs={'pk': self.object.pk})
+
+class MessageDeleteView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        message= get_object_or_404(Message, pk=pk)
+        return render(request, 'sns/message_delete.html', {'message': message})
+    
+    def post(self, request, pk):
+        message = get_object_or_404(Message, pk=pk)
+        if message.sender != request.user:
+            raise PermissionDenied
+        message.is_update = True
+        message.body = 'このメッセージは削除されました。'
+        message.save()
+        return redirect('sns:message_detail', pk=pk)
+    
 class MessageInboxView(LoginRequiredMixin, ListView):
     model = Message
     template_name = 'sns/message_inbox.html'
@@ -113,7 +156,12 @@ class MessageReplyView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.sender = self.request.user
         form.instance.recipient = self.origin_message.sender
-        return super().form_valid(form)
+        response = super().form_valid(form)
+
+        files = self.request.FILES.getlist('files')
+        for f in files:
+            Attachment.objects.create(message=self.object, file=f)
+        return response
     
     def get_success_url(self):
         return reverse('sns:message_inbox')
@@ -143,7 +191,22 @@ class MessageForwardView(LoginRequiredMixin, CreateView):
     
     def form_valid(self, form):
         form.instance.sender = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+
+        files = self.request.FILES.getlist('files')
+        for f in files:
+            Attachment.objects.create(message=self.object, file=f)
+        return response
     
     def get_success_url(self):
         return reverse('sns:message_outbox')
+    
+class AttachmentDeleteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        attachment = get_object_or_404(Attachment, pk=pk)
+        if attachment.message.sender != request.user:
+            raise PermissionDenied
+        
+        message_pk = attachment.message.pk
+        attachment.delete()
+        return redirect('sns:message_update', pk=message_pk)

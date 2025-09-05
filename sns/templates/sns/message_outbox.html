@@ -9,7 +9,7 @@
         {% for obj in object_list %}
             <li>
                 <a href="{% url 'sns:message_detail' obj.pk %}">
-                    {{ obj.subject }} - {{ obj.recipient.username }}
+                    {{ obj.subject }} - {{ obj.recipient }}
                 </a>
             </li>
         {% empty %}

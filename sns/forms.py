@@ -9,7 +9,11 @@ class PostCreateForm(forms.ModelForm):
 
 class MessageForm(forms.ModelForm):
     recipient = forms.ModelChoiceField(queryset=User.objects.all(), label='宛先')
-
+    # 単発ファイルフィールド（複数はJSで追加）
+    files = forms.FileField(
+        required=False,
+        label='添付ファイル'
+    )
     class Meta:
         model = Message
         fields = ['recipient', 'subject', 'body']

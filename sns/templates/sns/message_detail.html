@@ -5,15 +5,57 @@
 {% block contents %}
 <div class="container mt-4">
     <h2 class="mb-4">{{ object.subject }}</h2>
-    <p>送信者： {{ object.sender.username }}</p>
-    <p>{{ object.body|linebreaksbr }}</p>
-    <p><small>{{ object.created_at }}</small></p>
-    {% if object.recipient == request.user %}
-        <a href="{% url 'sns:message_reply' object.pk %}">返信</a>
-        <a href="{% url 'sns:message_inbox' %}">受信ボックス</a>
-    {% elif object.sender == request.user %}
-        <a href="{% url 'sns:message_forward' object.pk %}">転送</a>
-        <a href="{% url 'sns:message_outbox' %}">送信ボックス</a>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <p><strong>送信者：</strong>{{ object.sender }}</p>
+            <p><strong>宛先：</strong>{{ object.recipient }}</p>
+            <p><strong>送信日時：</strong>{{ object.created_at|date:"Y/m/d H:i" }}</p>
+            <hr>
+            {% if object.is_delete %}
+                <p class="text-muted"><i>{{ object.body }}</i></p>
+            {% else %}
+                <p>{{ object.body|linebreaksbr }}</p>
+                {% if object.is_update %}
+                    <small class="text-muted">(編集済)</small>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    {% if object.attachments.all %}
+        <div class="mb-4">
+            <h5>📎 添付ファイル</h5>
+            <ul>
+                {% for attachment in object.attachments.all %}
+                    <li>
+                        <a href="{{ attachment.file.url }}" target="blank">
+                            {{ attachment.file.name|cut:"message_files/"}}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     {% endif %}
+
+    <div class="mt-3">
+        {% comment %}返信は受信者が自分の場合のみ表示{% endcomment %}
+        {% if object.recipient == request.user %}
+            <a href="{% url 'sns:message_reply' object.pk %}" class="btn btn-primary">返信</a>
+            <a href="{% url 'sns:message_forward' object.pk %}" class="btn btn-secondary">転送</a>
+            <a href="{% url 'sns:message_inbox' %}" class="btn btn-outline-dark">受信ボックス</a>
+        {% endif %}
+
+        {% comment %}編集・削除は送信者か自分への送信テストの場合に表示{% endcomment %}
+        {% if object.sender == request.user or object.recipient == request.user %}
+            <a href="{% url 'sns:message_update' object.pk %}" class="btn btn-warning">編集</a>
+            <a href="{% url 'sns:message_delete' object.pk %}" class="btn btn-danger">削除</a>
+        {% endif %}
+
+        {% comment %}転送は送信者も受信者も可能{% endcomment %}
+        {% if object.sender == request.user %}
+            <a href="{% url 'sns:message_forward' object.pk %}" class="btn btn-secondary">転送</a>
+            <a href="{% url 'sns:message_outbox' %}" class="btn btn-outline-dark">送信ボックス</a>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

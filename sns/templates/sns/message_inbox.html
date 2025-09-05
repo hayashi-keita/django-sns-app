@@ -9,7 +9,7 @@
         {% for obj in object_list %}
             <li>
                 <a href="{% url 'sns:message_detail' obj.pk %}">
-                    {{ obj.subject }} - {{ obj.sender.username }}
+                    {{ obj.subject }} - {{ obj.sender }}
                     {% if not obj.is_read %}
                         <strong>[未読]</strong>
                     {% endif %}

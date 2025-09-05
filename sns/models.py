@@ -18,6 +18,16 @@ class Message(models.Model):
     body = models.TextField(verbose_name='メッセージ')
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
+    is_delete = models.BooleanField(default=False)
+    is_update = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.subject} ({self.sender} → {self.recipient})"
+
+class Attachment(models.Model):
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='attachments')
+    file = models.FileField(upload_to='message_files')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.file.name

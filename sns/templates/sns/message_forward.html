@@ -5,12 +5,40 @@
 {% block contents %}
 <div class="container mt-4">
     <h2 class="mb-4">転送</h2>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <table class="mb-4">
-            {{ form.as_table }}
-        </table>
+        <div class="mb-3">
+            {{ form.recipient.label_tag }}
+            {{ form.recipient }}
+        </div>
+        <div class="mb-3">
+            {{ form.subject.label_tag }}
+            {{ form.subject }}
+        </div>
+        <div class="mb-3">
+            {{ form.body.label_tag }}
+            {{ form.body }}
+        </div>
+
+        <div id="file-inputs" class="mb-3">
+            <input type="file" name="files" multiple>
+        </div>
+        <button id="add-file" type="button" class="btn btn-secondary mb-3">
+            + 添付ファイルを追加
+        </button>
+        <br>
+
         <button class="btn btn-primary" type="submit">送信</button>
     </form>
 </div>
+<script>
+document.getElementById('add-file').addEventListener('click', function() {
+    let container = document.getElementById('file-inputs');
+    let input = document.createElement('input');
+    input.type = 'file';
+    input.name = 'files';
+    input.classList.add('d-block', 'mb-2');
+    container.appendChild(input);
+});
+</script>
 {% endblock %}

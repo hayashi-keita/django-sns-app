@@ -5,10 +5,11 @@
 {% block contents %}
 <div class="container mt-4">
     <h2 class="mb-4">投稿編集</h2>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">更新</button>
+        <p><a href="{% url 'sns:post_detail' object.pk %}">戻る</a></p>
     </form>
 </div>
 {% endblock %}

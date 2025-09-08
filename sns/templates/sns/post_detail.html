@@ -4,10 +4,37 @@
 
 {% block contents %}
     <div class="container mt-4">
-        <h2 class="mb-4">{{ object.title }}</h2>
+        <h2 class="mb-4">{{ object.author }}さんの投稿</h2>
+        <h4><strong>タイトル：{{ object.title }}</strong></h4>
         <p>{{ object.content }}</p>
         <img src="{{ object.image.url }}" class="img-thumbnail">
-        <p><a href="{% url 'sns:post_update' object.pk %}">編集</a></p>
-        <p><a href="{% url 'sns:post_delete' object.pk %}">削除</a></p>
+        {% if object.author == request.user %}
+        <div class="mb-4">
+            <a href="{% url 'sns:post_update' object.pk %}">編集</a>
+            <a href="{% url 'sns:post_delete' object.pk %}">削除</a>
+        </div>
+        {% endif %}
+
+        <h4>コメント一覧</h4>
+        {% for comment in object.comments.all %}
+            <div class="mb-2">
+                <strong>{{ comment.user }}</strong>: {{  comment.body }}
+                <br>
+                <small>{{ comment.created_at }}</small>
+                {% if comment.user == request.user %}
+                    <a href="{% url 'sns:comment_update' comment.pk %}" class="btn btn-sm btn-outline-warning">編集</a>
+                    <a href="{% url 'sns:comment_delete' comment.pk %}" class="btn btn-sm btn-outline-danger">削除</a>
+                {% endif %}
+            </div>
+        {% empty %}
+            まだコメントはありません。
+        {% endfor %}
+        <hr>
+        <form  action="{% url 'sns:comment_create' object.pk %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-primary mb-4" type="submit">コメントする</button>
+        </form>
+        
     </div>
 {% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, Message
+from .models import Post, Message, Comment
 from django.contrib.auth.models import User
 
 class PostCreateForm(forms.ModelForm):
@@ -17,3 +17,11 @@ class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
         fields = ['recipient', 'subject', 'body']
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['body']
+        widgets = {
+            'body': forms.Textarea(attrs={'rows': 2, 'placeholder': 'コメントを入力...'})
+        }

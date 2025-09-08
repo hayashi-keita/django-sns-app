@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}コメント編集{% endblock %}
+
+{% block contents %}
+<div class="container mt-4">
+    <h2 class="mb-4">コメント編集</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-warning" type="submit">更新</button>
+        <a href="{% url 'sns:post_detail' object.post.pk %}" class="btn btn-secondary">キャンセル</a>
+    </form>
+</div>
+{% endblock %}

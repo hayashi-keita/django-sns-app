@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}コメント削除{% endblock %}
+
+{% block contents %}
+<div class="container mt-4">
+    <h2 class="mb-4">コメント削除確認</h2>
+    <p>このコメントを削除してもよろしいですか？</p>
+    <blockquote class="blockquote">
+        <p>{{ obect.body }}</p>
+        <footer class="blockquote-footer">{{ object.user }}</footer>
+    </blockquote>
+
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit">削除</button>
+        <a href="{% url 'sns:post_detail' object.post.pk %}" class="btn btn-secondary">キャンセル</a>
+    </form>
+</div>
+{% endblock %}

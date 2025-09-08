@@ -1,12 +1,11 @@
-from urllib import response
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.views import View
 from django.core.exceptions import PermissionDenied
-from .models import Post, Message, Attachment
-from .forms import PostCreateForm, MessageForm
+from .models import Comment, Post, Message, Attachment
+from .forms import PostCreateForm, MessageForm, CommentForm
 
 def index_view(request):
     return render(request, 'sns/index.html')
@@ -18,6 +17,54 @@ class PostListView(LoginRequiredMixin, ListView):
 class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post
     template_name = 'sns/post_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CommentForm()
+        return context
+    
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    modes = Comment
+    form_class = CommentForm
+
+    def form_valid(self, form):
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        form.instance.post = post
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('sns:post_detail', kwargs={'pk': self.object.post.pk})
+
+class CommentUpdateView(LoginRequiredMixin, UpdateView):
+    medel = Comment
+    form_class = CommentForm
+    template_name = 'sns/comment_update.html'
+
+    def get_queryset(self):
+        return Comment.objects.filter(user=self.request.user)
+    
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.user != self.request.user:
+            raise PermissionDenied
+        return obj
+    
+    def get_success_url(self):
+        return reverse('sns:post_detail', kwargs={'pk': self.object.post.pk})
+
+class CommentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Comment
+    template_name = 'sns/comment_delete.html'
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.user != self.request.user:
+            raise PermissionDenied
+        return obj
+    
+    def get_success_url(self):
+        return reverse('sns:post_detail', kwargs={'pk': self.object.post.pk})
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post

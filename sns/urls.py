@@ -19,4 +19,7 @@ urlpatterns = [
     path('message/<int:pk>/update/', views.MessageUpdateView.as_view(), name='message_update'),
     path('message/<int:pk>/delete/', views.MessageDeleteView.as_view(), name='message_delete'),
     path('attachment/<int:pk>/delete/', views.AttachmentDeleteView.as_view(), name='attachment_delete'),
+    path('comment/<int:pk>/create/', views.CommentCreateView.as_view(), name='comment_create'),
+    path('comment/<int:pk>/update/', views.CommentUpdateView.as_view(), name='comment_update'),
+    path('comment/<int:pk>/delete', views.CommentDeleteView.as_view(), name='comment_delete'),
 ]

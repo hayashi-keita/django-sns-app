@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}通知一覧{% endblock %}
+
+{% block contents %}
+<div class="container mt-4">
+    <h2 class="mb-4">通知一覧</h2>
+    <ul>
+        {% for obj in object_list %}
+            <li style="{% if not obj.is_read %}font-weight:bold;{% endif %}">
+                {% if not obj.is_read %}
+                    <a href="{% url 'sns:notification_mark_read' obj.pk %}">
+                        {% if obj.notification_type == 'like_post' %}
+                            {{ obj.sender }} さんがあなたの投稿にいいねしました。（未読）
+                        {% elif obj.notification_type == 'like_comment' %}
+                            {{ obj.sender }} さんがあなたのコメントにいいねしました。（未読）
+                        {% elif obj.notification_type == 'comment' %}
+                            {{ obj.sender }} さんがあなたの投稿にコメントしました。"{{ obj.comment.body }}"（未読）
+                        {% endif %}
+                    </a>
+                {% else %}
+                    {% if obj.notification_type == 'like_post' %}
+                        {{ obj.sender }} さんがあなたの投稿にいいねしました。
+                    {% elif obj.notification_type == 'like_comment' %}
+                        {{ obj.sender }} さんがあなたのコメントにいいねしました。
+                    {% elif obj.notification_type == 'comment' %}
+                        {{ obj.sender }} さんがあなたの投稿にコメントしました。"{{ obj.comment.body }}"
+                    {% endif %}
+                {% endif %}
+                ({{ obj.created_at|date:"Y-m-d H:i" }})
+            </li>
+        {% empty %}
+            通知はありません。
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

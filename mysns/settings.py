@@ -64,6 +64,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'sns.context_processors.unread_message_count',
+                'sns.context_processors.unread_notification_count',
             ],
         },
     },

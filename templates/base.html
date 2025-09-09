@@ -25,6 +25,14 @@
                             </span>
                         {% endif %}
                     </a>
+                    <a class="nav-link mx-3 position-relative" href="{% url 'sns:notification_list' %}" >
+                        通知
+                        {% if unread_notification_count > 0 %}
+                            <span class="postion-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ unread_notification_count }}
+                            </span>
+                        {% endif %}
+                    </a>
                 {% endif %}
             </div>
             <div class="navbar-nav d-flex flex-row">

@@ -4,10 +4,23 @@
 
 {% block contents %}
     <div class="container mt-4">
-        <h2 class="mb-4">{{ object.author }}さんの投稿</h2>
+        <h2 class="mb-4">{{ object.author }} さんの投稿</h2>
         <h4><strong>タイトル：{{ object.title }}</strong></h4>
         <p>{{ object.content }}</p>
-        <img src="{{ object.image.url }}" class="img-thumbnail">
+        {% if object.image %}
+            <img src="{{ object.image.url }}" class="img-thumbnail mb-2">
+        {% endif %}
+        <form method="post" action="{% url 'sns:post_like' object.pk %}">
+            {% csrf_token %}
+            {% if request.user in object.likes.all %}
+                <button class="btn btn-sm btn-outline-danger mb-2" type="submit">💔解除</button>
+                {{ object.like_count }} 件
+            {% else %}
+                <button class="btn btn-sm btn-outline-primary mb-2" type="submit">❤️いいね</button>
+                {{ object.like_count }} 件
+            {% endif %}
+        </form>
+
         {% if object.author == request.user %}
         <div class="mb-4">
             <a href="{% url 'sns:post_update' object.pk %}">編集</a>
@@ -21,6 +34,18 @@
                 <strong>{{ comment.user }}</strong>: {{  comment.body }}
                 <br>
                 <small>{{ comment.created_at }}</small>
+
+                <form method="post" action="{% url 'sns:comment_like' comment.pk %}" class="d-inline">
+                    {% csrf_token %}
+                    {% if request.user in comment.likes.all %}
+                        <button class="btn btn-sm btn-outline-danger" type="submit">💔解除</button>
+                        {{ comment.like_count }} 件
+                    {% else %}
+                        <button class="btn btn-sm btn-outline-primary" type="submit">❤️いいね</button>
+                        {{ comment.like_count }} 件
+                    {% endif %}
+                </form>
+
                 {% if comment.user == request.user %}
                     <a href="{% url 'sns:comment_update' comment.pk %}" class="btn btn-sm btn-outline-warning">編集</a>
                     <a href="{% url 'sns:comment_delete' comment.pk %}" class="btn btn-sm btn-outline-danger">削除</a>
@@ -30,11 +55,11 @@
             まだコメントはありません。
         {% endfor %}
         <hr>
+        
         <form  action="{% url 'sns:comment_create' object.pk %}" method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <button class="btn btn-primary mb-4" type="submit">コメントする</button>
-        </form>
-        
+        </form>   
     </div>
 {% endblock %}

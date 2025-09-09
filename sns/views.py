@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.views import View
 from django.core.exceptions import PermissionDenied
-from .models import Comment, Post, Message, Attachment
+from .models import Notification, Post, Message, Attachment, Comment
 from .forms import PostCreateForm, MessageForm, CommentForm
 
 def index_view(request):
@@ -31,7 +31,17 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         post = get_object_or_404(Post, pk=self.kwargs['pk'])
         form.instance.post = post
         form.instance.user = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        # 投稿者にコメントを通知（自分の投稿には通知しない）
+        if post.author != self.request.user:
+            Notification.objects.create(
+                sender=self.request.user,
+                recipient = post.author,
+                post= post,
+                comment=self.object,
+                notification_type='comment',
+            )
+        return response
     
     def get_success_url(self):
         return reverse('sns:post_detail', kwargs={'pk': self.object.post.pk})
@@ -257,3 +267,60 @@ class AttachmentDeleteView(LoginRequiredMixin, View):
         message_pk = attachment.message.pk
         attachment.delete()
         return redirect('sns:message_update', pk=message_pk)
+
+class CommentLikeView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        comment = get_object_or_404(Comment, pk=pk)
+        user = request.user
+
+        if user in comment.likes.all():
+            # すでに「いいね」していたら取り消す
+            comment.likes.remove(user)
+        else:
+            # 「いいね」していなければ追加する
+            comment.likes.add(user)
+            if comment.user != user:
+                Notification.objects.create(
+                    sender=user,
+                    recipient=comment.user,
+                    post=comment.post,
+                    comment=comment,
+                    notification_type='like_comment',
+                )
+        return redirect('sns:post_detail', pk=comment.post.pk)
+
+class PostLikeView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        user = request.user
+
+        if user in post.likes.all():
+            post.likes.remove(user)
+        else:
+            post.likes.add(user)
+            # 通知を作成
+            if post.author != user:
+                Notification.objects.create(
+                    sender=user,
+                    recipient=post.author,
+                    notification_type='like_post',
+                    post=post,
+                )
+        return redirect('sns:post_detail', pk=pk)
+
+class NotificationListView(LoginRequiredMixin, ListView):
+    model = Notification
+    template_name = 'sns/notification_list.html'
+
+    def get_queryset(self):
+        return Notification.objects.filter(recipient=self.request.user).order_by('-created_at')
+
+class NotificationMarkReadView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        notification = get_object_or_404(Notification, pk=pk, recipient=request.user)
+        if not notification.is_read:
+            notification.is_read = True
+            notification.save()
+        if notification.post:
+            return redirect('sns:post_detail', pk=notification.post.pk)
+        return redirect('sns:notification_list')    

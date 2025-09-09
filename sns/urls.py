@@ -10,6 +10,7 @@ urlpatterns = [
     path('post/<int:pk>/detail/', views.PostDetailView.as_view(), name='post_detail'),
     path('post/<int:pk>/update/', views.PostUpdateView.as_view(), name='post_update'),
     path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post_delete'),
+    path('post/<int:pk>/like/', views.PostLikeView.as_view(), name='post_like'),
     path('message/create/', views.MessageCreateView.as_view(), name='message_create'),
     path('message/inbox/', views.MessageInboxView.as_view(), name='message_inbox'),
     path('message/outbox/', views.MessageOutboxView.as_view(), name='message_outbox'),
@@ -22,4 +23,7 @@ urlpatterns = [
     path('comment/<int:pk>/create/', views.CommentCreateView.as_view(), name='comment_create'),
     path('comment/<int:pk>/update/', views.CommentUpdateView.as_view(), name='comment_update'),
     path('comment/<int:pk>/delete', views.CommentDeleteView.as_view(), name='comment_delete'),
+    path('comment/<int:pk>/like/', views.CommentLikeView.as_view(), name='comment_like'),
+    path('notifications/', views.NotificationListView.as_view(), name='notification_list'),
+    path('notification/<int:pk>/read/', views.NotificationMarkReadView.as_view(), name='notification_mark_read'),
 ]

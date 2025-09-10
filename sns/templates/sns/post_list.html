@@ -3,17 +3,30 @@
 {% block title %}投稿一覧{% endblock %}
 
 {% block contents %}
-    <div class="container mt-4">
-        <h2 class="mb-4">投稿一覧</h2>
-        <ul>
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center">📌 投稿一覧</h2>
+        
+        <div class="row g-4">
             {% for obj in object_list %}
-                <li>{{ obj.author }}</li>
-                <li>{{ obj.title }}</li>
-                <li>{{ obj.created_at }}</li>
-                <p><a href="{% url 'sns:post_detail' obj.pk %}">詳細</a></p>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0 rounded-3">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold text-primay">
+                                {{ obj.title }}
+                            </h5>
+                            <p class="card-text text-muted small mb-2">
+                                👤 {{ obj.author }} <br>
+                                🕒 {{ obj.created_at|date:"Y/m/d H:i" }}
+                            </p>
+                            <a href="{% url 'sns:post_detail' obj.pk %}" class="btn btn-outline-primary btn-sm">
+                                詳細を見る
+                            </a>
+                        </div>
+                    </div>
+                </div>
             {% empty %}
                 投稿データがありません。
             {% endfor %}
-        </ul>
+        </div>
     </div>
 {% endblock %}

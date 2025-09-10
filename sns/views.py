@@ -321,6 +321,7 @@ class NotificationMarkReadView(LoginRequiredMixin, View):
         if not notification.is_read:
             notification.is_read = True
             notification.save()
+        # 投稿が存在するかをチェック
         if notification.post:
             return redirect('sns:post_detail', pk=notification.post.pk)
-        return redirect('sns:notification_list')    
+        return redirect('sns:notification_list') 

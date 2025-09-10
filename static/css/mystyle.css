@@ -1,0 +1,9 @@
+.janken-btn {
+    font-size: 3rem;
+    margin: 5px;
+    padding: 10px 20px;
+}
+
+.janken-result {
+    font-size: 2rem;
+}

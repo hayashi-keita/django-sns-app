@@ -72,9 +72,7 @@ class NumberGuessVeiw(View):
 class FortuneWeatherView(View):
     template_name = 'games/fortune_weather.html'
 
-    def get_weather(self):
-        # 都市名を指定
-        city = 'Tokyo'
+    def get_weather(self, city):
         api_key = settings.OPENWEATHERMAP_API_KEY
         url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=ja'
 
@@ -99,14 +97,17 @@ class FortuneWeatherView(View):
         return weather
 
     def get(self, request):
+        # 場所
+        city = request.session.get('city', 'Tokyo')
         # 天気
-        weather = self.get_weather()
+        weather = self.get_weather(city)
         # 運勢はまだ引いていないので None
         fortune = request.session.get('fortune', None)
 
         context = {
             'fortune': fortune,
             'weather': weather,
+            'city': city,
         }
         return render(request, self.template_name, context)
         
@@ -114,8 +115,11 @@ class FortuneWeatherView(View):
     def post(self, request):
         # セッションから運勢を削除してリセット
         if 'reset' in request.POST:
-            if 'fortune' in request.session:
-                del request.session['fortune']
+            request.session.pop('fortune', None)
+            return redirect('games:fortune_weather')
+        if 'city' in request.POST:
+            city = request.POST.get('city')
+            request.session['city'] = city
             return redirect('games:fortune_weather')
         # 運勢リスト
         fortunes = ['大吉', '中吉', '小吉', '吉', '末吉', '凶']

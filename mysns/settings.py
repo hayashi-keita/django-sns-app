@@ -119,6 +119,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 import os
+from dotenv import load_dotenv
+load_dotenv()
+# お天気サイトAPI
+OPENWEATHERMAP_API_KEY = os.getenv('OPENWEATHERMAP_API_KEY')
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
@@ -136,5 +140,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'sns:index'
 LOGOUT_REDIRECT_URL = 'accounts:login'
 
-# お天気サイトAPI
-OPENWEATHERMAP_API_KEY = '8ac6c28811716b9ee7f9f4e75103350f'

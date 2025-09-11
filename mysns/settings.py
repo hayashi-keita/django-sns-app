@@ -135,3 +135,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'sns:index'
 LOGOUT_REDIRECT_URL = 'accounts:login'
+
+# お天気サイトAPI
+OPENWEATHERMAP_API_KEY = '8ac6c28811716b9ee7f9f4e75103350f'

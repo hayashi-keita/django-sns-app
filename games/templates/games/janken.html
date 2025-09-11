@@ -3,19 +3,19 @@
 {% block title %}じゃんけん{% endblock %}
 
 {% block contents %}
-<div class="container mt-4">
-    <h2 class="mb-4">じゃんけんゲーム</h2>
+<div class="container text-center mt-4">
+    <h1 class="mb-4">じゃんけんゲーム</h1>
     <form method="post">
         {% csrf_token %}
-        <button type="submit" name="choice" value="グー" class="janken-btn">✊</button>
-        <button type="submit" name="choice" value="チョキ" class="janken-btn">✌</button>
-        <button type="submit" name="choice" value="パー" class="janken-btn">✋</button>
+        <button type="submit" name="choice" value="グー" class="game-btn">✊</button>
+        <button type="submit" name="choice" value="チョキ" class="game-btn">✌</button>
+        <button type="submit" name="choice" value="パー" class="game-btn">✋</button>
     </form>
 
     {% if result %}
-        <p class="janken-result">あなたの手：{{ user_choice }}</p>
-        <p class="janken-result">コンピュータの手：{{ computer_choice }}</p>
-        <p class="janken-result">結果：{{ result }}</p>
+        <p class="game-result">あなたの手：{{ user_choice }}</p>
+        <p class="game-result">コンピュータの手：{{ computer_choice }}</p>
+        <p class="game-result">結果：{{ result }}</p>
     {% endif %}
 
     <form method="get">

@@ -1,9 +1,9 @@
-.janken-btn {
+.game-btn {
     font-size: 3rem;
     margin: 5px;
     padding: 10px 20px;
 }
 
-.janken-result {
+.game-result {
     font-size: 2rem;
 }

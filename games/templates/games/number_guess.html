@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}数当てゲーム{% endblock %}
+
+{% block contents %}
+<div class="container mt-4 text-center">
+    <h1 class="mb-4">🎲 数当てゲーム</h1>
+    <p class="game-result">{{ message }}</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <input type="number" name="guess" min="1" max="10" class="form-control w-25 game-result mx-auto">
+        <button type="submit"class="btn btn-primary mt-2">送信</button>
+    </form>
+
+    <form method="post" class="mt-2">
+        {% csrf_token %}
+        <button type="submit" name="reset" value="1" class="btn btn-danger">リセット</button>
+    </form>
+</div>
+{% endblock %}

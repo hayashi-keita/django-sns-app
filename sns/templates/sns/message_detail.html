@@ -38,21 +38,14 @@
     {% endif %}
 
     <div class="mt-3">
-        {% comment %}返信は受信者が自分の場合のみ表示{% endcomment %}
         {% if object.recipient == request.user %}
             <a href="{% url 'sns:message_reply' object.pk %}" class="btn btn-primary">返信</a>
             <a href="{% url 'sns:message_forward' object.pk %}" class="btn btn-secondary">転送</a>
             <a href="{% url 'sns:message_inbox' %}" class="btn btn-outline-dark">受信ボックス</a>
         {% endif %}
-
-        {% comment %}編集・削除は送信者か自分への送信テストの場合に表示{% endcomment %}
-        {% if object.sender == request.user or object.recipient == request.user %}
+        {% if object.sender == request.user %}
             <a href="{% url 'sns:message_update' object.pk %}" class="btn btn-warning">編集</a>
             <a href="{% url 'sns:message_delete' object.pk %}" class="btn btn-danger">削除</a>
-        {% endif %}
-
-        {% comment %}転送は送信者も受信者も可能{% endcomment %}
-        {% if object.sender == request.user %}
             <a href="{% url 'sns:message_forward' object.pk %}" class="btn btn-secondary">転送</a>
             <a href="{% url 'sns:message_outbox' %}" class="btn btn-outline-dark">送信ボックス</a>
         {% endif %}

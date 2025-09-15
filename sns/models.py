@@ -55,6 +55,7 @@ class Notification(models.Model):
         ('like_post', 'いいね（投稿）'),
         ('like_comment', 'いいね（コメント）'),
         ('comment', 'コメント'),
+        ('follow', 'フォロー'),
     )
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_notifications')
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_notifications')

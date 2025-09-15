@@ -26,4 +26,5 @@ urlpatterns = [
     path('comment/<int:pk>/like/', views.CommentLikeView.as_view(), name='comment_like'),
     path('notifications/', views.NotificationListView.as_view(), name='notification_list'),
     path('notification/<int:pk>/read/', views.NotificationMarkReadView.as_view(), name='notification_mark_read'),
+    path('notification/<int:pk>/delete/', views.NotificatonDeleteView.as_view(), name='notification_delete'),
 ]

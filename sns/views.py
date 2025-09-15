@@ -314,6 +314,17 @@ class NotificationListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Notification.objects.filter(recipient=self.request.user).order_by('-created_at')
+    
+class NotificatonDeleteView(LoginRequiredMixin, DeleteView):
+    model = Notification
+    template_name = 'sns/notification_delete.html'
+    success_url = reverse_lazy('sns:notification_list')
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.recipient != self.request.user:
+            raise PermissionDenied
+        return obj    
 
 class NotificationMarkReadView(LoginRequiredMixin, View):
     def get(self, request, pk):

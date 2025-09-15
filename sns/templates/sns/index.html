@@ -51,5 +51,19 @@
             </div>
         </div>
     </div>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title">プロフィール</h5>
+                {% if user.is_authenticated %}
+                    <p class="card-text">プロフィールの閲覧、編集ができます。</p>
+                    <a href="{% url 'accounts:profile_detail' request.user.username %}" class="btn btn-success">プロフィール</a>
+                    <a href="{% url 'accounts:profile_list' %}" class="btn btn-success">プロフィール一覧</a>
+                {% else %}
+                    <p class="card-text">ログインしてください。</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

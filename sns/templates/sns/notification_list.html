@@ -16,6 +16,8 @@
                             {{ obj.sender }} さんがあなたのコメントにいいねしました。（未読）
                         {% elif obj.notification_type == 'comment' %}
                             {{ obj.sender }} さんがあなたの投稿にコメントしました。"{{ obj.comment.body }}"（未読）
+                        {% elif obj.notification_type == 'follow' %}
+                            {{ obj.sender }} さんがあなたをフォローしました。（未読）
                         {% endif %}
                     </a>
                 {% else %}
@@ -25,9 +27,12 @@
                         {{ obj.sender }} さんがあなたのコメントにいいねしました。
                     {% elif obj.notification_type == 'comment' %}
                         {{ obj.sender }} さんがあなたの投稿にコメントしました。"{{ obj.comment.body }}"
+                    {% elif obj.notification_type == 'follow' %}
+                        {{ obj.sender }} さんがあなたをフォローしました。
                     {% endif %}
                 {% endif %}
                 ({{ obj.created_at|date:"Y-m-d H:i" }})
+                <a href="{% url 'sns:notification_delete' obj.pk %}">削除</a>
             </li>
         {% empty %}
             通知はありません。

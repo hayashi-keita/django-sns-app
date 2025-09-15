@@ -9,8 +9,9 @@
 
     <form method="post" class="mb-3">
         {% csrf_token %}
-        <input type="text" name="city" value="{{ city }}" placeholder="都市名入力（例；Tokyo, Osaka）">
-        <button type="submit" class="btn btn-info">天気予報を更新</button>
+        <input type="text" name="city" value="{{ city }}"
+        placeholder="都市名入力（例；Tokyo, Osaka）" class="form-control w-25 mx-auto">
+        <button type="submit" class="btn btn-info mt-2">天気予報を更新</button>
     </form>
 
     <div class="card mt-4 mx-auto" style="width: 18rem;">
@@ -26,7 +27,7 @@
 
     <div class="card mt-4 mx-auto" style="width: 18rem;">
         <div class="card-body">
-            <h5 class="card-title">🔮運勢</h5>
+            <h5 class="card-title">運勢</h5>
             {% if fortune %}🔮
                 <p class="card-text" style="font-size: 2rem;">{{ fortune }}</p>
             {% else %}

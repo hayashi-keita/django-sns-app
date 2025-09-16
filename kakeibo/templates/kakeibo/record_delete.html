@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}記録削除{% endblock %}
+
+{% block contents %}
+<div class="container mt-4">
+    <h2 class="mb-4">記録の削除</h2>
+    <p>以下の記録を本当に削除しますか？</p>
+
+    <ul>
+        <li>日付：{{ object.date }}</li>
+        <li>カテゴリ：{{ object.get_category_display }}</li>
+        <li>金額：{{ object.amount }} 円</li>
+        <li>メモ；{{ object.memo }}</li>
+    </ul>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">削除</button>
+        <a href="{% url 'kakeibo:record_list' %}" class="btn btn-secondary">戻る</a>
+    </form>
+</div>
+{% endblock %}

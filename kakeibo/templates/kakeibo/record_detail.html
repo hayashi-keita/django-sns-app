@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}記録詳細{% endblock %}
+
+{% block contents %}
+<div class="container mt-4">
+    <h2 class="mb-4">📊 記録の詳細</h2>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <p><strong>日付：</strong>{{ object.date }}</p>
+            <p><strong>カテゴリ：</strong>{{ object.get_category_display }}</p>
+            <p><strong>金額：</strong>{{ object.amount }}</p>
+            <p><strong>メモ：</strong>{{ object.memo|default:"なし" }}</p>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{% url 'kakeibo:record_update' object.pk %}" class="btn btn-sm btn-primary">編集</a>
+        <a href="{% url 'kakeibo:record_delete' object.pk %}" class="btn btn-sm btn-danger">削除</a>
+        <a href="{% url 'kakeibo:record_list' %}" class="btn btn-sm btn-secondary">一覧へ戻る</a>
+    </div>
+</div>
+{% endblock %}

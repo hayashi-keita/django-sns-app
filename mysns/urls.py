@@ -25,6 +25,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('', include('sns.urls')),
     path('games', include('games.urls')),
+    path('kakeibo', include('kakeibo.urls')),
 ]
 
 if settings.DEBUG:

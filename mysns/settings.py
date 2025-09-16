@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'sns.apps.SnsConfig',
     'accounts.apps.AccountsConfig',
     'games.apps.GamesConfig',
+    'kakeibo.apps.KakeiboConfig',
 ]
 
 MIDDLEWARE = [

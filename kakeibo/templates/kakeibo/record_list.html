@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}家計簿一覧{% endblock %}
+
+{% block contents %}
+<div class="container mt-4">
+    <h2 class="mb-4">家計簿一覧</h2>
+    <a href="{% url 'kakeibo:record_create' %}" class="btn btn-primary mb-3">記録を追加</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>日付</th>
+                <th>区分</th>
+                <th>金額</th>
+                <th>メモ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obj in object_list %}
+                <tr>
+                    <td>{{ obj.date }}</td>
+                    <td>{{ obj.get_category_display }}</td>
+                    <td>{{ obj.amount }} 円</td>
+                    <td>{{ obj.memo }}</td>
+                    <td>
+                        <a href="{% url 'kakeibo:record_update' obj.pk %}" class="btn btn-sm btn-primary">編集</a>
+                        <a href="{% url 'kakeibo:record_delete' obj.pk %}" class="btn btn-sm btn-danger">削除</a>
+                        <a href="{% url 'kakeibo:record_detail' obj.pk %}" class="btn btn-sm btn-info">詳細</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">まだ記録がありません。</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <p><a href="{% url 'kakeibo:record_graph' %}">収支グラフ</a></p>
+    </table>
+</div>
+{% endblock %}

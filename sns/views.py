@@ -324,7 +324,7 @@ class NotificatonDeleteView(LoginRequiredMixin, DeleteView):
         obj = super().get_object(queryset)
         if obj.recipient != self.request.user:
             raise PermissionDenied
-        return obj    
+        return obj
 
 class NotificationMarkReadView(LoginRequiredMixin, View):
     def get(self, request, pk):

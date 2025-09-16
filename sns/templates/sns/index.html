@@ -65,5 +65,19 @@
             </div>
         </div>
     </div>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title">家計簿アプリ</h5>
+                {% if user.is_authenticated %}
+                    <p class="card-text">記録の登録、修正、可視化ができます。</p>
+                    <a href="{% url 'kakeibo:record_create' %}" class="btn btn-success">記録登録</a>
+                    <a href="{% url 'kakeibo:record_list' %}" class="btn btn-success">家計簿一覧</a>
+                {% else %}
+                    <p class="card-text">ログインしてください。</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

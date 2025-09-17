@@ -1,14 +1,42 @@
-{% extends 'base.html' %}
+    {% extends 'base.html' %}
 
-{% block title %}収支グラフ{% endblock %}
+    {% block title %}家計簿グラフ{% endblock %}
 
-{% block contents %}
-<div class="contanier mt-4">
-    <h2 class="mb-4 text-center">📊 月ごとの収入・支出・収支</h2>
-    {% if graph %}
-        {{ graph|safe }}
-    {% else %}
-        <p class="text-center">まだ記録がありません。</p>
-    {% endif %}
-</div>
-{% endblock %}
+    {% block contents %}
+    <div class="contanier mt-4">
+        <h2 class="mb-4 text-center">📊 家計簿グラフ</h2>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="carc-title">収入・支出・収支（折れ線グラフ）</h5>
+                {% if line_graph %}
+                    {{ line_graph|safe }}
+                {% else %}
+                    <p class="text-center">まだ記録がありません。</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title">収入・支出（棒グラフ）</h5>
+                {% if bar_graph %}
+                    {{ bar_graph|safe }}
+                {% else %}
+                    <p class="text-center">まだ記録がありません。</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title">収支割合（円グラフ）</h5>
+                {% if pie_graph %}
+                    {{ pie_graph|safe }}
+                {% else %}
+                    <p class="text-center">まだ記録がありません。</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endblock %}

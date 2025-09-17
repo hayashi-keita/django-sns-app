@@ -35,7 +35,8 @@
                 </tr>
             {% endfor %}
         </tbody>
-        <p><a href="{% url 'kakeibo:record_graph' %}">収支グラフ</a></p>
     </table>
+    <a href="{% url 'kakeibo:record_graph' %}">収支グラフ</a>
+    <a href="{% url 'kakeibo:record_graph_chartjs' %}" class="ms-3">グラフchart.js</a>
 </div>
 {% endblock %}

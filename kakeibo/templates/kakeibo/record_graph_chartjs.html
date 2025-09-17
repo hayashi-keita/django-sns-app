@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}家計簿グラフ（Chart.js）{% endblock %}
+
+{% block contents %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">📊 家計簿グラフ（Chart.js）</h2>
+
+    {% if chart_data %}
+        <canvas id="lineChart" height="100"></canvas>
+        <canvas id="barChart" height="100" class="mt-4"></canvas>
+        <canvas id="pieChart" height="100" class="mt-4"></canvas>
+    {% else %}
+        <p class="text-center">まだ記録がありません。</p>
+    {% endif %}       
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const data = {{ chart_data|safe }}
+// ===== 折れ線グラフ =====
+const lineCtx = document.getElementById('lineChart').getContext('2d');
+new Chart(lineCtx, {
+    type: 'line',
+    data: {
+        labels: data.labels,
+        datasets: [
+            { label: '収入', data: data.income, borderColor: 'green', fill: false },
+            { label: '支出', data: data.expense, borderColor: 'red', fill: false },
+            { label: '収支', data: data.balance, borderColor: 'blue', fill: false },
+        ]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'top'} } }
+});
+
+// ===== 棒グラフ =====
+const barCtx = document.getElementById('barChart').getContext('2d');
+new Chart(barCtx, {
+    type: 'bar',
+    data: {
+        labels: data.labels,
+        datasets: [
+            { label: '収入', data: data.income, backgroundColor: 'green' },
+            { label: '支出', data: data.expense, backgroundColor: 'red' },
+        ]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true } } }
+});
+
+// ===== 円グラフ =====
+if (data.expense_labels.length > 0 && data.expense_values.length > 0) {
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: data.expense_labels,
+            datasets: [{
+                data: data.expense_values,
+                backgroundColor: ['#FF6384','#36A2EB','#FFCE56','#4BC0C0']
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'top' } } }
+    });
+} else {
+    document.getElementById('pieChart').outerHTML = '<p class="text-center">支出データがありません。</p>';
+}
+
+</script>
+{% endblock %}

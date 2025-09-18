@@ -1,5 +1,6 @@
 from calendar import month
 import json
+from os import replace
 from django.shortcuts import render
 from django.views.generic import (
     ListView, CreateView, UpdateView,
@@ -20,6 +21,30 @@ class RecordListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Record.objects.filter(user=self.request.user).order_by('-date')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        qs = Record.objects.filter(user=self.request.user).values('date', 'category', 'amount')
+        df = pd.DataFrame(qs)
+        if not df.empty:
+            # 月単位に変換
+            df['month'] = pd.to_datetime(df['date']).dt.to_period('M').dt.to_timestamp()
+            # カテゴリを日本語に変換
+            category_map = dict(Record.CATEGORY_CHOICES)
+            df['category'] = df['category'].map(category_map)
+            # 月ごとに集計
+            monthly = df.groupby(['month', 'category'])['amount'].sum().reset_index()
+            monthly_pivot = monthly.pivot(index='month', columns='category', values='amount').fillna(0)
+            # 収支を追加
+            monthly_pivot['収支'] = monthly_pivot.get('収入', 0) - monthly_pivot.get('支出', 0)
+            # インデックスをリセットして辞書化
+            monthly_pivot.reset_index(inplace=True)
+            context['monthly_table'] = monthly_pivot.to_dict(orient='records')
+        else:
+            context['monthly_table'] = []
+        
+        return context
 
 class RecordCreateView(LoginRequiredMixin, CreateView):
     model = Record
@@ -140,7 +165,6 @@ class RecordGraphView(LoginRequiredMixin, TemplateView):
             )
             fig_pie.update_traces(textposition='inside', textinfo='percent+label')
             context['pie_graph'] = fig_pie.to_html(full_html=False)
-        
         else:
             context['pie_graph'] = None
 

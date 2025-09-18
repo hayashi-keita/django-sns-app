@@ -36,6 +36,31 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <h3 class="mt-4">📑 月ごとの収支一覧</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>月</th>
+                <th>収入</th>
+                <th>支出</th>
+                <th>収支</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in monthly_table %}
+                <tr>
+                    <td>{{ row.month|date:"Y-m" }}</td>
+                    <td>￥{{ row.収入|default:0|floatformat:0 }}</td>
+                    <td>￥{{ row.支出|default:0|floatformat:0 }}</td>
+                    <td class="{% if row.収支 <  0 %}text-danger{% else %}text-success{% endif %}">
+                        ￥{{ row.収支|floatformat:0 }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
     <a href="{% url 'kakeibo:record_graph' %}">収支グラフ</a>
     <a href="{% url 'kakeibo:record_graph_chartjs' %}" class="ms-3">グラフchart.js</a>
 </div>

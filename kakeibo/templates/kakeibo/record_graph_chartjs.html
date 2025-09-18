@@ -9,7 +9,9 @@
     {% if chart_data %}
         <canvas id="lineChart" height="100"></canvas>
         <canvas id="barChart" height="100" class="mt-4"></canvas>
-        <canvas id="pieChart" height="100" class="mt-4"></canvas>
+        <div style="width: 400px; height: 400px;">
+            <canvas id="pieChart" height="100" class="mt-4"></canvas>
+        </div>
     {% else %}
         <p class="text-center">まだ記録がありません。</p>
     {% endif %}       
@@ -59,7 +61,7 @@ if (data.expense_labels.length > 0 && data.expense_values.length > 0) {
                 backgroundColor: ['#FF6384','#36A2EB','#FFCE56','#4BC0C0']
             }]
         },
-        options: { responsive: true, plugins: { legend: { position: 'top' } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
     });
 } else {
     document.getElementById('pieChart').outerHTML = '<p class="text-center">支出データがありません。</p>';

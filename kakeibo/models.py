@@ -10,7 +10,7 @@ class Record(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='ユーザー')
     date = models.DateField(verbose_name='日付')
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, verbose_name='区分')
-    amount = models.IntegerField(max_length=20, verbose_name='金額')
+    amount = models.IntegerField(verbose_name='金額')
     memo = models.TextField(blank=True, null=True, verbose_name='メモ')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='作成日')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新日')

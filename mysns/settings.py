@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'games.apps.GamesConfig',
     'kakeibo.apps.KakeiboConfig',
+    'schedule.apps.ScheduleConfig',
 ]
 
 MIDDLEWARE = [

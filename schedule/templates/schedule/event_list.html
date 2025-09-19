@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}イベント一覧{% endblock %}
+
+{% block contents %}
+<div class="container mt-4 text-center">
+    <h2 class="mb-4 text-center">📅 登録イベント一覧</h2>
+    <div id="calendar"></div>
+    <a href="{% url 'schedule:dashboard' %}" class="btn btn-secondary mt-4 mb-4">⬅ ダッシュボードに戻る</a>
+</div>
+{% endblock %}
+
+{% block script %}
+<!-- ✅ FullCalendar CSS & JS 読み込み -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+
+<script>
+    const events = [
+        {% for event in events %}
+        {
+            title: "{{ event.title|escapejs }}",
+            start: "{{ event.start_time|date:'c' }}"{% if event.end_time %},
+            end: "{{ event.end_time|date:'c' }}"{% endif %},
+            url: "{% url 'schedule:event_detail' event.pk %}",
+            description: "{{ event.description|default:''|escapejs }}"
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: events,
+        locale: 'ja',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,listMonth',
+        },
+        eventContent: function(arg) {
+            if (arg.view.type.startsWith('list')) {
+                const titleEl = document.createElement('div');
+                titleEl.innerHTML = '<strong>' + arg.event.title + '</strong>';
+
+                const descEl = document.createElement('div');
+                descEl.innerText = arg.event.extendedProps.description || '';
+                return { domNodes: [titleEl, descEl] };
+            }
+            return { domNodes: [document.createTextNode(arg.event.title )]};
+        },
+    });
+    calendar.render();
+});
+</script>
+{% endblock %}

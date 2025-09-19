@@ -24,8 +24,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('', include('sns.urls')),
-    path('games', include('games.urls')),
-    path('kakeibo', include('kakeibo.urls')),
+    path('games/', include('games.urls')),
+    path('kakeibo/', include('kakeibo.urls')),
+    path('schedule/', include('schedule.urls')),
 ]
 
 if settings.DEBUG:

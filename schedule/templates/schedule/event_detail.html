@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}イベント詳細{% endblock %}
+
+{% block contents %}
+<div class="container mt-4">
+    <h2 class="mb-4">{{ object.title }}</h2>
+    <p><strong>開始:</strong> {{ object.start_time }}</p>
+    <p><strong>終了:</strong> {{ object.end_time }}</p>
+    <p><strong>説明:</strong> {{ object.description }}</p>
+    <a href="{% url 'schedule:event_update' object.pk %}" class="btn btn-primary">編集</a>
+    <a href="{% url 'schedule:event_delete' object.pk %}" class="btn btn-danger">削除</a>
+    <a href="{% url 'schedule:event_list' %}" class="btn btn-secondary">戻る</a>
+</div>
+{% endblock %}

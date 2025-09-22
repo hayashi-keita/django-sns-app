@@ -6,17 +6,15 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = ['title', 'start_time', 'end_time', 'description', 'related_record']
         widgets = {
-            'start_time': forms.DateInput(
-                attrs={'type': 'datetime-local'},
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'start_time': forms.DateTimeInput(
+                attrs={'type': 'datetime-local', 'class': 'form-control'},
                 format='%Y-%m-%dT%H:%M',
             ),
-            'end_time': forms.DateInput(
-                attrs={'type': 'datetime-local'},
+            'end_time': forms.DateTimeInput(
+                attrs={'type': 'datetime-local', 'class': 'form-control'},
                 format='%Y-%m-%dT%H:%M',
             ),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'related_record': forms.Select(attrs={'class': 'form-control'}),
         }
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args,**kwargs)
-        for field in ['start_time', 'end_time']:
-            if self.instance and getattr(self.instance, field):
-                self.fields[field].initial = getattr(self.instance, field).strftime('%Y-%m-%dT%H:%M')

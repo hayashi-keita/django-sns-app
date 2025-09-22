@@ -6,5 +6,8 @@ class RecordForm(forms.ModelForm):
         model = Record
         fields = ['date', 'category', 'amount', 'memo']
         widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
+            'date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+            'amount': forms.NumberInput(attrs={'class': 'form-control'}),
+            'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }

@@ -21,12 +21,32 @@
         {% endfor %}
     </ul>
 
-    <h3 class="mb-4 text-center">📝 イベント登録</h3>
-
-    <form method="post" class="my-3">
+    <form method="post" class="card shadow-sm p-4 mb-4 rounded">
+        <h3 class="mb-4 text-center">📝 イベント登録</h3>
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">登録</button>
+        <div class="mb-3 text-start">
+            {{ form.title.label }}
+            {{ form.title }}
+        </div>
+        <div class="mb-3 text-start">
+            {{ form.start_time.label }}
+            {{ form.start_time }}
+        </div>
+        <div class="mb-3 text-start">
+            {{ form.ecd_time.label }}
+            {{ form.end_time }}
+        </div>
+        <div class="mb-3 text-start">
+            {{ form.description.label }}
+            {{ form.description }}
+        </div>
+        <div class="mb-3 text-start">
+            {{ form.related_record.label }}
+            {{ form.related_record }}
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+            <button type="submit" class="btn btn-primary w-auto me-3">登録</button>
+            <a href="{% url 'schedule:event_list' %}" class="btn btn-secondary">イベント一覧</a>
+        </div>
     </form>
-    <a href="{% url 'schedule:event_list' %}" class="btn btn-primary">イベント一覧</a>
 {% endblock %}

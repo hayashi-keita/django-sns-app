@@ -4,11 +4,26 @@
 
 {% block contents %}
 <div class="container mt-4">
-    <h2 class="mb-4">家計簿の追加</h2>
+    <h2 class="mb-4">📑 家計簿の追加</h2>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">保存</button>
+        <div class="mb-3">
+            {{ form.date.label }}
+            {{ form.date }}
+        </div>
+        <div class="mb-3">
+            {{ form.category.label }}
+            {{ form.category }}
+        </div>
+        <div class="mb-3">
+            {{ form.amount.label }}
+            {{ form.amount }}
+        </div>
+        <div class="mb-3">
+            {{ form.memo.label }}
+            {{ form.memo }}
+        </div>
+        <button type="submit" class="btn btn-success me-3">保存</button>
         <a href="{% url 'kakeibo:record_list' %}" class="btn btn-secondary">戻る</a>
     </form>
 </div>
